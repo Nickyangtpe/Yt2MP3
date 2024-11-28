@@ -1,0 +1,379 @@
+<html>
+
+<head>
+  <title>Yt2MP3 - YouTube to MP3 Converter</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 1.5rem 0;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .converter-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin: 1rem;
+    }
+
+    input[type="text"] {
+      width: calc(100% - 2rem);
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding: 0 1rem;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 10px;
+    }
+
+    .feature svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+
+    .conversion-info {
+      display: none;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .video-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .thumbnail {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .conversion-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+
+    .error-message {
+      background: rgba(255, 87, 87, 0.1);
+      border: 1px solid #ff5757;
+      color: #ff5757;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .download-button {
+      background: linear-gradient(45deg, #4ecdc4, #45b7af);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .download-button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(45deg, #45b7af, #3da29a);
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 1.75rem;
+      }
+
+      .converter-box {
+        padding: 1rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+
+      .feature {
+        padding: 1rem;
+      }
+
+      .feature svg {
+        width: 36px;
+        height: 36px;
+      }
+
+      input[type="text"] {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo">Yt2MP3</div>
+
+    <div class="converter-box">
+      <h2>YouTube to MP3 Converter</h2>
+      <p>Convert YouTube videos to MP3 format quickly and easily</p>
+
+      <input type="text" id="videoUrl" placeholder="Paste YouTube URL here...">
+      <button onclick="convertVideo()">Convert to MP3</button>
+
+      <div class="error-message" id="errorMessage"></div>
+
+      <div class="conversion-info" id="conversionInfo">
+        <div class="video-title" id="videoTitle">Video Title</div>
+        <img id="videoThumbnail" class="thumbnail" alt="Video thumbnail" width="320" height="180">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="conversion-stats">
+          <div class="stat">
+            <div class="stat-value" id="progressPercent">0%</div>
+            <div>Progress</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="conversionSpeed">0 MB/s</div>
+            <div>Speed</div>
+          </div>
+        </div>
+        <button id="downloadButton" class="download-button" onclick="downloadMP3()">Download MP3</button>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+        <h3>Fast Conversion</h3>
+        <p>Convert videos in seconds with our optimized engine</p>
+      </div>
+
+      <div class="feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        <h3>100% Safe</h3>
+        <p>Secure conversion without any software installation</p>
+      </div>
+
+      <div class="feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path
+            d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+        <h3>High Quality</h3>
+        <p>Get the best audio quality for your music</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showError(message) {
+      const errorElement = document.getElementById('errorMessage');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      setTimeout(() => {
+        errorElement.style.display = 'none';
+      }, 5000);
+    }
+
+    function validateYouTubeUrl(url) {
+      const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/;
+      return youtubeRegex.test(url);
+    }
+
+    function convertVideo() {
+      const videoUrl = document.getElementById('videoUrl').value;
+      const conversionInfo = document.getElementById('conversionInfo');
+      const downloadButton = document.getElementById('downloadButton');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercent = document.getElementById('progressPercent');
+      const conversionSpeed = document.getElementById('conversionSpeed');
+      const videoTitle = document.getElementById('videoTitle');
+      const videoThumbnail = document.getElementById('videoThumbnail');
+
+      // Reset UI
+      downloadButton.style.display = 'none';
+      conversionInfo.style.display = 'none';
+
+      if (!videoUrl) {
+        showError('Please enter a YouTube URL');
+        return;
+      }
+
+      if (!validateYouTubeUrl(videoUrl)) {
+        showError('Please enter a valid YouTube URL');
+        return;
+      }
+
+      try {
+        const apiUrl = `http://uwu.freeserver.tw:21160/api/download?url=${encodeURIComponent(videoUrl)}&type=mp3`;
+        const eventSource = new EventSource(apiUrl);
+
+        // Show conversion info
+        conversionInfo.style.display = 'block';
+
+        eventSource.onmessage = function (event) {
+          const data = JSON.parse(event.data);
+
+          if (data.title) {
+            videoTitle.textContent = data.title;
+            videoThumbnail.src = data.thumbnail;
+          }
+
+          if (data.progress) {
+            const progressValue = parseFloat(data.progress);
+            progressBar.style.width = `${progressValue}%`;
+            progressPercent.textContent = `${progressValue}%`;
+          }
+
+          if (data.speed) {
+            conversionSpeed.textContent = data.speed;
+          }
+
+          if (event.type === 'completed') {
+            downloadButton.href = data.downloadLink;
+            downloadButton.style.display = 'block';
+            eventSource.close();
+          }
+        };
+
+        eventSource.onerror = function () {
+          showError('Download failed. Please try again.');
+          eventSource.close();
+        };
+
+      } catch (error) {
+        showError('An error occurred during conversion. Please try again.');
+        console.error('Conversion error:', error);
+      }
+    }
+
+    function downloadMP3() {
+      try {
+        const downloadLink = document.getElementById('downloadButton').href;
+        const videoTitle = document.getElementById('videoTitle').textContent;
+
+        const link = document.createElement('a');
+        link.href = downloadLink;
+        link.download = `${videoTitle}.mp3`.replace(/[/\\?%*:|"<>]/g, '-'); // 移除不合法的檔案名稱字元
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        showError('Download failed. Please try again.');
+        console.error('Download error:', error);
+      }
+    }
+
+    // Add input validation and mobile-friendly touch events
+    document.getElementById('videoUrl').addEventListener('paste', (e) => {
+      setTimeout(() => {
+        const input = e.target;
+        input.value = input.value.trim();
+      }, 0);
+    });
+
+    document.addEventListener('touchstart', function () { }, false);
+  </script>
+</body>
+
+</html>
