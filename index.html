@@ -1,6 +1,5 @@
 <html>
 <head>
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
   <title>Yt2MP3 - YouTube to MP3 Converter</title>
   <style>
     body {
@@ -304,47 +303,43 @@
       }
 
       try {
-        const apiUrl = `http://uwu.freeserver.tw:21160/api/download?url=${encodeURIComponent(videoUrl)}&type=mp3`;
-        const eventSource = new EventSource(apiUrl);
+    const apiUrl = `http://uwu.freeserver.tw:21160/api/download?url=${encodeURIComponent(videoUrl)}&type=mp3`;
 
-        // Show conversion info
-        conversionInfo.style.display = 'block';
+    // 使用 fetch 來替代 EventSource
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // 顯示轉換資訊
+            conversionInfo.style.display = 'block';
 
-        eventSource.onmessage = function (event) {
-          const data = JSON.parse(event.data);
+            if (data.title) {
+                videoTitle.textContent = data.title;
+                videoThumbnail.src = data.thumbnail;
+            }
 
-          if (data.title) {
-            videoTitle.textContent = data.title;
-            videoThumbnail.src = data.thumbnail;
-          }
+            if (data.progress) {
+                const progressValue = parseFloat(data.progress);
+                progressBar.style.width = `${progressValue}%`;
+                progressPercent.textContent = `${progressValue}%`;
+            }
 
-          if (data.progress) {
-            const progressValue = parseFloat(data.progress);
-            progressBar.style.width = `${progressValue}%`;
-            progressPercent.textContent = `${progressValue}%`;
-          }
+            if (data.speed) {
+                conversionSpeed.textContent = data.speed;
+            }
 
-          if (data.speed) {
-            conversionSpeed.textContent = data.speed;
-          }
-
-          if (event.type === 'completed') {
-            downloadButton.href = data.downloadLink;
-            downloadButton.style.display = 'block';
-            eventSource.close();
-          }
-        };
-
-        eventSource.onerror = function () {
-          showError('Download failed. Please try again.');
-          eventSource.close();
-        };
-
-      } catch (error) {
-        showError('An error occurred during conversion. Please try again.');
-        console.error('Conversion error:', error);
-      }
-    }
+            if (data.event === 'completed') {
+                downloadButton.href = data.downloadLink;
+                downloadButton.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            showError('Download failed. Please try again.');
+            console.error('Conversion error:', error);
+        });
+} catch (error) {
+    showError('An error occurred during conversion. Please try again.');
+    console.error('Conversion error:', error);
+}
 
     function downloadMP3() {
       try {
