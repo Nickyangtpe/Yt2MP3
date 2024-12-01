@@ -1208,23 +1208,14 @@
       return regex.test(url);
     };
 
-    const selectFormat = (value) => {
-      document.querySelectorAll('.format-selector .format-option').forEach(option => {
-        option.classList.remove('active');
-      });
+    const selectOption = (type, value) => {
+      document.querySelectorAll(`.${type}-selector .format-option`).forEach(option => option.classList.remove('active'));
       event.target.classList.add('active');
-      window.selectedFormat = value;
-    };
-
-    const selectDownloadType = (value) => {
-      document.querySelectorAll('.download-type-selector .format-option').forEach(option => {
-        option.classList.remove('active');
-      });
-      event.target.classList.add('active');
-      downloadType = value;
-      document.getElementById('videoUrl').placeholder = value === 'single' ?
-        'Paste YouTube URL here...' :
-        'Paste YouTube Playlist URL here...';
+      if (type === 'format') window.selectedFormat = value;
+      if (type === 'download-type') {
+        downloadType = value;
+        document.getElementById('videoUrl').placeholder = value === 'single' ? 'Paste YouTube URL here...' : 'Paste YouTube Playlist URL here...';
+      }
     };
 
     const convertVideo = () => {
@@ -1262,7 +1253,7 @@
         document.getElementById('progressPercent').textContent = `${info.progress}`;
         if (info.progress === '100.00%') {
           showLoading();
-          document.getElementById('loadingText').textContent = 'Complete conversion... (take a few seconds)';
+          loadingtext = 'Complete conversion... (take a few seconds)';
         } else {
           hideLoading();
         }
@@ -1274,7 +1265,6 @@
       if (event === 'completed') {
         document.getElementById('downloadButton').href = "http://uwu.freeserver.tw:21160" + info.downloadLink;
         document.getElementById('downloadButton').style.display = 'block';
-        document.getElementById('convert-button').style.display = '';
         hideLoading();
       }
       if (event === 'error') resetUIWithError();
