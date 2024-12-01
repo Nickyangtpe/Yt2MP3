@@ -1,0 +1,22 @@
+{
+  "name": "Yt2MP3 - YouTube to MP3 Converter",
+  "short_name": "Yt2MP3",
+  "description": "Convert YouTube videos to MP3 format quickly and easily with our free online converter.",
+  "start_url": "/website",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a73e8",
+  "icons": [
+    {
+      "src": "http://uwu.freeserver.tw:21160/cd/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "http://uwu.freeserver.tw:21160/cd/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "lang": "en-US"
+}
